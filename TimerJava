@@ -81,7 +81,7 @@ class Timer {
 
  public void playSound() {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("lib/Sound.wav"));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("mixkit-classic-short-alarm-993.wav"));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
