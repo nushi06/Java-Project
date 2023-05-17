@@ -1,0 +1,95 @@
+import java.util.ArrayList;
+import java.util.ArrayList; // new java package - helps resize arrays 
+import java.util.Scanner; // reads user input - new?? deals with a new util in standard library
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.net.URL;
+
+public class TimerJava {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // scanner object
+        ArrayList<Timer> timers = new ArrayList<>(); // array list that stores different timers
+
+        while (true) {
+            System.out.println("Create Timer = 1"); // asks for user input - does the task based
+            System.out.println("Start Timer = 2"); // on the number
+            System.out.println("Exit = 3");
+            System.out.print("Enter the number of the option you want to click, then press Enter: ");
+            int choice = scanner.nextInt(); // scans the input
+
+            if (choice == 1) { // conditions
+                System.out.print("Enter timer duration in seconds: ");
+                int duration = scanner.nextInt(); // scans input
+                Timer timer = new Timer(duration); // creates timer
+                timers.add(timer); // add timer to list
+                System.out.println("Timer created.");
+            } else if (choice == 2) {
+                displayTimers(timers); // display timer
+                System.out.print("Enter timer index to start: ");
+                int index = scanner.nextInt(); // scan input
+                if (index >= 0 && index < timers.size()) {
+                    Timer timer = timers.get(index);
+                    timer.start();
+                } else {
+                    System.out.println("There is no timer that has that index. No timer selected.");
+                }
+            } else if (choice == 3) {
+                break;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    public static void displayTimers(ArrayList<Timer> timers) { // takes timer objects as a parameter
+        for (int i = 0; i < timers.size(); i++) {
+            System.out.println(i + ". " + timers.get(i));
+        }
+    }
+}
+
+class Timer {
+    private int seconds;
+
+    public Timer(int seconds) {
+        this.seconds = seconds; // constructor of the timer class - duration in seconds
+    }
+
+    public void start() {
+        startTimer(seconds); // method of timer class
+    }
+
+    private void startTimer(int seconds) {
+        if (seconds <= 0) {
+            System.out.println("Timer has ended!");
+            playSound();
+        } else {
+            System.out.println("Time remaining: " + seconds + " seconds");
+            try { // - used for exceptions
+                Thread.sleep(1000); // Sleep for 1 second - new program thread (https://stackoverflow.com/questions/10820033/make-a-simple-timer-in-java)
+            } catch (InterruptedException e) { // allows it to dictate what the code will do in the exception
+                e.printStackTrace(); // tells you where the exception is
+            } // https://www.w3schools.com/java/java_try_catch.asp
+            startTimer(seconds - 1); // calls itself recursively
+        }
+    }
+
+    public String toString() { // displays timer
+        return "Timer: " + seconds + " seconds";
+    }
+
+ public void playSound() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("lib/Sound.wav"));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+            Thread.sleep(clip.getMicrosecondLength() / 1000);
+            clip.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+}
